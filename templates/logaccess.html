@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="flight-container" style="overflow: auto; max-height: 80vh">
+        <div class="table-responsive">
+            <table class="table" id="logaccess">
+                <thead>
+                    <tr>
+                        <th scope="col">Room</th>
+                        <th scope="col">User</th>
+                        <th scope="col">Date Access</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for log in logaccess %}
+                    <tr id={{ log.id }}>
+                        <th scope="row">{{ log.room_id }}</th>
+                        <td> {{ log.user_id }} </td>
+                        <td> {{ log.date_access }} </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
