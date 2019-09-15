@@ -7,7 +7,7 @@ Web application develop in flask framework
 Folow the code below:
 
 ```
-% git clone https://github.com/GregBueno/flask-web-application
+$ git clone https://github.com/GregBueno/flask-web-application
 $ conda create -n rasp-flask python=3.6
 $ source activate rasp-flask
 $ cd flask-web-application
