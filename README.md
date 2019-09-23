@@ -7,17 +7,24 @@ Web application develop in flask framework
 Folow the code below:
 
 ```
-$ git clone https://github.com/GregBueno/flask-web-application
+$ git clone https://github.com/GregBueno/flask_web
 $ conda create -n rasp-flask python=3.6
 $ source activate rasp-flask
-$ cd flask-web-application
+$ cd flask_web
 $ pip install -r requirements.txt
+```
+
+If you want to create db, follow the comands below:
+```
+$ cd ..
+$ from flask_web import db,create_app
+$ db.create_all(app=create_app())
 ```
 
 ### Running
 
 ```
-$ export FLASK_APP=flask-web-application
+$ export FLASK_APP=flask_web
 $ export FLASK_DEBUG=1
 $ flask run
 ```

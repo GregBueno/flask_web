@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
-from .models import User, Room, LogAccess
+from .models import User, Room, LogAccess, Role
 from . import db
 from datetime import datetime
+# from flask_user import roles_required
+
 # import RPi.GPIO as GPIO
 
 auth = Blueprint('auth', __name__)
@@ -30,13 +32,25 @@ def login_post():
 
 @auth.route('/signup')
 def signup():
-    return render_template('signup.html')
+    role_list = ['admin','professor','aluno']
+    return render_template('signup.html',role_list=role_list)
 
 @auth.route('/signup', methods=['POST'])
 def signup_post():
     email = request.form.get('email')
     name = request.form.get('name')
     password = request.form.get('password')
+    num_un_p = request.form.get('num_un_p')
+    access_p = request.form.get('access_p')
+    dt_start = request.form.get('dt_start')
+    dt_end = request.form.get('dt_end')
+    role_p = request.form.get('role_p')
+    print(role_p)
+
+    if access_p == 'ON':
+        access_p = 1
+    else:
+        access_p = 0
 
     user = User.query.filter_by(email=email).first()
 
@@ -45,11 +59,17 @@ def signup_post():
         return redirect(url_for('auth.signup'))
 
     new_user = User(email=email,
-                    name=name,
                     password=generate_password_hash(password, method='sha256'),
-                    admin=0,
-                    access_permission=0)
+                    name = name,
+                    num_university = num_un_p,
+                    access_permission=access_p,
+                    dt_start_access = dt_start,
+                    dt_end_access = dt_end)
 
+
+    # new_user.roles.append(Role(name=role_p))
+
+    print(new_user)
     db.session.add(new_user)
     db.session.commit()
 

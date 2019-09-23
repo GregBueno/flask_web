@@ -1,0 +1,53 @@
+Cadastro de usuários
+
+Administrador
+    • Pagina inicial
+    • Login
+    • Cadastro de aluno e professor
+    • Cadastro de sala e horpario disponível
+    • Log de acessos a salas
+    • Cadastro de horários
+    • Aba de acesso da sala
+Professor
+    • Pagina inicial
+    • Login
+    • Log de acessos as salas
+    • Solicitação de cadastro de horário(OPTATIVO)
+    • Aba de acesso da sala
+Aluno
+    • Pagina inicial
+    • Login
+    • Aba de acesso da sala
+__________________________________________
+
+• Cadastro de aluno e professor
+        Login
+        Senha
+        Nome
+        Numero da carteirinha
+        Tipo usuário: aluno/ professor/ admin
+        Permissão de acesso
+        Data inicial para acesso a sala
+        Data final para acesso a sala
+
+• Cadastro de horários
+        Horario
+
+• Cadastro De horário
+        Sala
+        Data
+        Hora de utilização
+        Descrição
+
+• Log de acessos a salas
+        Sala
+        Horario
+        Usuário
+
+• Aba de acesso da sala
+        Botao para acessar sala, valida se o usuário esta no horário definido
+
+• SIMULAR ACESSO COM:
+        DATA DE ACESSO
+        HORARIO
+        BOTAO ACESSAR
