@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_user import UserManager
 
 db = SQLAlchemy()
 
@@ -9,6 +10,7 @@ def create_app():
 
     app.config['SECRET_KEY'] = 'thisismysecretkeydonotstealit'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+    # app.config['USER_EMAIL_SENDER_EMAIL'] = "noreply@example.com"
 
     db.init_app(app)
 
@@ -17,6 +19,9 @@ def create_app():
     login_manager.init_app(app)
 
     from .models import User
+
+    # Setup Flask-User
+    # user_manager = UserManager(app, db, User)
 
     @login_manager.user_loader
     def load_user(user_id):

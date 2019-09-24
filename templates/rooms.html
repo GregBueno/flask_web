@@ -1,22 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="flight-container" style="overflow: auto; max-height: 80vh">
-        <div class="table-responsive">
-            <table class="table" id="rooms">
-                <thead>
-                    <tr>
-                        <th scope="col">Room</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for r in rooms %}
-                    <tr id={{ r.id }}>
-                        <th scope="row">{{ r.room }}</th>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Register</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }} Go to <a href="{{ url_for('auth.login') }}">login page</a>.
+            </div>
+        {% endif %}
+        {% endwith %}
+        <form action="/signup" method="POST">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="room" name="room" placeholder="Room" autofocus="">
+                </div>
+            </div>
+
+            <button class="button is-block is-info is-large is-fullwidth">Save</button>
+        </form>
     </div>
+</div>
+
+<div class="flight-container" style="overflow: auto; max-height: 80vh">
+    <div class="table-responsive">
+        <table class="table" id="rooms">
+            <thead>
+                <tr>
+                    <th scope="col">Room</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for r in rooms %}
+                <tr id={{ r.id }}>
+                    <th scope="row">{{ r.room }}</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

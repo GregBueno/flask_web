@@ -27,34 +27,49 @@
                                 Access Rooms
                             </a>
                             {% endif %}
+
                             {% if current_user.is_authenticated %}
                             <a href="{{ url_for('auth.users') }}" class="navbar-item">
                                 Users
                             </a>
                             {% endif %}
+
                             {% if current_user.is_authenticated %}
                             <a href="{{ url_for('auth.rooms') }}" class="navbar-item">
                                 Rooms
                             </a>
                             {% endif %}
+
                             {% if current_user.is_authenticated %}
                             <a href="{{ url_for('auth.logaccess') }}" class="navbar-item">
                                 Log Access
                             </a>
                             {% endif %}
+
                             {% if current_user.is_authenticated %}
                             <a href="{{ url_for('main.profile') }}" class="navbar-item">
                                 Profile
                             </a>
                             {% endif %}
+
                             {% if not current_user.is_authenticated %}
                             <a href="{{ url_for('auth.login') }}" class="navbar-item">
                                 Login
                             </a>
+                            {% endif %}
+
+                            {% if current_user.is_authenticated %}
                             <a href="{{ url_for('auth.signup') }}" class="navbar-item">
-                                Sign Up
+                                Register User
                             </a>
                             {% endif %}
+
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('auth.hours') }}" class="navbar-item">
+                                Register Hours
+                            </a>
+                            {% endif %}
+
                             {% if current_user.is_authenticated %}
                             <a href="{{ url_for('auth.logout') }}" class="navbar-item">
                                 Logout

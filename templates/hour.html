@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Hour</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }} Go to <a href="{{ url_for('auth.login') }}">login page</a>.
+            </div>
+        {% endif %}
+        {% endwith %}
+        <form action="/hour" method="POST">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="hour_start" name="hour_start" placeholder="Start Hour" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="hour_end" name="hour_end" placeholder="End Hour" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="desc_hour" name="desc_hour" placeholder="Desc" autofocus="">
+                </div>
+            </div>
+
+            <button class="button is-block is-info is-large is-fullwidth">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+<!-- <div class="flight-container" style="overflow: auto; max-height: 80vh">
+    <div class="table-responsive">
+        <table class="table" id="hours">
+            <thead>
+                <tr>
+                    <th scope="col">Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for h in hours %}
+                <tr id={{ r.id }}>
+                    <th scope="row">{{ h.desc_hour }}</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div> -->

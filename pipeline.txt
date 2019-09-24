@@ -1,9 +1,9 @@
 Cadastro de usuários
 
 Administrador
-    • Pagina inicial
-    • Login
-    • Cadastro de aluno e professor
+   OK • Pagina inicial
+   OK • Login
+   OK • Cadastro de aluno e professor
     • Cadastro de sala e horpario disponível
     • Log de acessos a salas
     • Cadastro de horários

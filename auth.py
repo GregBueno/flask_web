@@ -1,10 +1,12 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
-from .models import User, Room, LogAccess, Role
+from .models import User, Room, LogAccess, Role, Hours
 from . import db
 from datetime import datetime
-# from flask_user import roles_required
+from flask_user import roles_required, UserManager
+
+# from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 
 # import RPi.GPIO as GPIO
 
@@ -45,7 +47,6 @@ def signup_post():
     dt_start = request.form.get('dt_start')
     dt_end = request.form.get('dt_end')
     role_p = request.form.get('role_p')
-    print(role_p)
 
     if access_p == 'ON':
         access_p = 1
@@ -67,7 +68,7 @@ def signup_post():
                     dt_end_access = dt_end)
 
 
-    # new_user.roles.append(Role(name=role_p))
+    new_user.roles.append(Role(name=role_p))
 
     print(new_user)
     db.session.add(new_user)
@@ -82,7 +83,7 @@ def logout():
     return redirect(url_for('main.index'))
 
 @auth.route('/users')
-@login_required
+# @roles_required('admin')
 def users():
     users = User.query.all()
     return render_template('users.html', users=users)
@@ -92,6 +93,43 @@ def users():
 def rooms():
     rooms = Room.query.all()
     return render_template('rooms.html', rooms=rooms)
+
+@auth.route('/rooms', methods=['POST'])
+def rooms_post():
+    room = request.form.get('room')
+
+# ---------------------- Cad Horario
+
+@auth.route('/hour')
+def hours():
+    hours = Hours.query.all()
+    for i in hours:
+        print(i.desc_hour)
+    return render_template('hour.html')
+    # , hours=hours)
+
+@auth.route('/hour', methods=['POST'])
+def hours_post():
+
+    hour_start = request.form.get('hour_start')
+    hour_end = request.form.get('hour_end')
+    desc_hour = request.form.get('desc_hour')
+
+
+    new_hours = Hours(hour_start = hour_start,
+                    hour_end = hour_end,
+                    desc_hour = desc_hour)
+
+    print(new_hours)
+    db.session.add(new_hours)
+    db.session.commit()
+
+    return render_template('hour.html', hours=hours)
+
+
+# --------------------- END
+
+
 
 @auth.route('/logaccess')
 @login_required
