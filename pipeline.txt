@@ -4,16 +4,17 @@ Administrador
    OK • Pagina inicial
    OK • Login
    OK • Cadastro de aluno e professor
-    • Cadastro de sala e horpario disponível
-    • Log de acessos a salas
-    • Cadastro de horários
-    • Aba de acesso da sala
+   OK • Cadastro de sala e horpario disponível
+   Ok • Log de acessos a salas
+   OK • Cadastro de horários
+   Ok • Aba de acesso da sala
+
 Professor
     • Pagina inicial
     • Login
     • Log de acessos as salas
-    • Solicitação de cadastro de horário(OPTATIVO)
     • Aba de acesso da sala
+
 Aluno
     • Pagina inicial
     • Login

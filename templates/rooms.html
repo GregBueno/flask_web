@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="column is-4 is-offset-4">
-    <h3 class="title">Register</h3>
+    <h3 class="title">Room</h3>
     <div class="box">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -11,7 +11,7 @@
             </div>
         {% endif %}
         {% endwith %}
-        <form action="/signup" method="POST">
+        <form action="/rooms" method="POST">
             <div class="field">
                 <div class="control">
                     <input class="input is-large" type="room" name="room" placeholder="Room" autofocus="">

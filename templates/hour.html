@@ -26,7 +26,7 @@
 
             <div class="field">
                 <div class="control">
-                    <input class="input is-large" type="desc_hour" name="desc_hour" placeholder="Desc" autofocus="">
+                    <input class="input is-large" type="desc_hour" name="desc_hour" placeholder="Description" autofocus="">
                 </div>
             </div>
 
@@ -34,9 +34,9 @@
         </form>
     </div>
 </div>
-{% endblock %}
 
-<!-- <div class="flight-container" style="overflow: auto; max-height: 80vh">
+
+<div class="flight-container" style="overflow: auto; max-height: 80vh">
     <div class="table-responsive">
         <table class="table" id="hours">
             <thead>
@@ -46,11 +46,13 @@
             </thead>
             <tbody>
             {% for h in hours %}
-                <tr id={{ r.id }}>
+                <tr id={{ h.id }}>
                     <th scope="row">{{ h.desc_hour }}</th>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
-</div> -->
+</div>
+
+{% endblock %}

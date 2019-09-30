@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
-from .models import User, Room, LogAccess, Role, Hours
+from .models import User, Room, LogAccess, Role, Hours, HourRegister
 from . import db
 from datetime import datetime
 from flask_user import roles_required, UserManager
@@ -35,7 +35,9 @@ def login_post():
 @auth.route('/signup')
 def signup():
     role_list = ['admin','professor','aluno']
-    return render_template('signup.html',role_list=role_list)
+    users = User.query.all()
+
+    return render_template('signup.html',role_list=role_list,users=users)
 
 @auth.route('/signup', methods=['POST'])
 def signup_post():
@@ -82,11 +84,7 @@ def logout():
     logout_user()
     return redirect(url_for('main.index'))
 
-@auth.route('/users')
-# @roles_required('admin')
-def users():
-    users = User.query.all()
-    return render_template('users.html', users=users)
+# ---------------------- Cad Room
 
 @auth.route('/rooms')
 @login_required
@@ -97,16 +95,21 @@ def rooms():
 @auth.route('/rooms', methods=['POST'])
 def rooms_post():
     room = request.form.get('room')
+    new_room = Room(room=room)
+    db.session.add(new_room)
+    db.session.commit()
+
+    return redirect(url_for('auth.rooms'))
+
+# --------------------- End Cad Room
 
 # ---------------------- Cad Horario
 
 @auth.route('/hour')
 def hours():
     hours = Hours.query.all()
-    for i in hours:
-        print(i.desc_hour)
-    return render_template('hour.html')
-    # , hours=hours)
+
+    return render_template('hour.html', hours=hours)
 
 @auth.route('/hour', methods=['POST'])
 def hours_post():
@@ -124,12 +127,52 @@ def hours_post():
     db.session.add(new_hours)
     db.session.commit()
 
-    return render_template('hour.html', hours=hours)
+    return redirect(url_for('auth.hours'))
 
+# --------------------- End Cad Horario
 
-# --------------------- END
+# ---------------------- Register Access
 
+@auth.route('/register_access')
+def register_access():
 
+    rooms = Room.query.all()
+    hours = Hours.query.all()
+    users = User.query.all()
+
+    list_access = db.session.query(HourRegister, Room, User, Hours
+    ).join(Room, Room.id == HourRegister.room_id
+    ).join(User, User.id == HourRegister.user_id
+    ).join(Hours, Hours.id == HourRegister.hours_id
+    ).filter(User.name != 'test'
+    ).all()
+
+    for tt in list_access:
+        print( tt[1].room,
+               tt[2].name,
+               tt[0].dt_access,
+               tt[3].desc_hour,
+               tt[0].description)
+
+    return render_template('register_access.html', room_list=rooms, user_list=users, list_hour=hours, list_access = list_access)
+
+@auth.route('/register_access', methods=['POST'])
+def register_access_post():
+
+    room = request.form.get('room_list')
+    user = request.form.get('user_list')
+    dt_access = request.form.get('dt_access')
+    hour = request.form.get('hour_list')
+    description = request.form.get('description')
+
+    new_access = HourRegister(room_id = room, user_id = user, dt_access = dt_access, hours_id = hour, description = description)
+    print(room,user,dt_access,hour,description)
+
+    db.session.add(new_access)
+    db.session.commit()
+
+    return redirect(url_for('auth.register_access'))
+# --------------------- End Register Access
 
 @auth.route('/logaccess')
 @login_required
@@ -138,29 +181,60 @@ def logaccess():
     print(logaccess)
     return render_template('logaccess.html', logaccess=logaccess)
 
+# ---------------------- Access Room
 @auth.route('/access',methods=['POST','GET'])
 @login_required
 def access():
     rooms = Room.query.all()
     if request.method == 'POST':
         room_post = request.form.get('rooms')
+        dt_access = request.form.get('dt_access')
+        hour_access = request.form.get('hour_access')
 
-        date_hour_now = datetime.now()
-        date_hour_str = date_hour_now.strftime('%d/%m/%Y %H:%M:%S')
+        print(room_post,dt_access,hour_access)
 
-        print(room_post,session["user_id"],date_hour_str)
+        list_access = db.session.query(HourRegister, Room, User, Hours
+        ).join(Room, Room.id == HourRegister.room_id
+        ).join(User, User.id == HourRegister.user_id
+        ).join(Hours, Hours.id == HourRegister.hours_id
+        ).filter(Room.id == room_post, User.id == session["user_id"], HourRegister.dt_access == dt_access
+        ).all()
 
-        new_log = LogAccess(room_id = room_post,
-                            user_id = session["user_id"],
-                            date_access = date_hour_str)
+        if len(list_access) > 0:
+            flash([1,'Access released.'],category='info')
 
-        db.session.add(new_log)
-        db.session.commit()
+            new_log = LogAccess(room_id = room_post,
+                    user_id = session["user_id"],
+                    date_access = dt_access + ' ' + hour_access)
 
-        # GPIO.setmode(GPIO.BOARD)
-        # GPIO.setup(LED_PIN, GPIO.OUT)
-        # GPIO.output(LED_PIN, 1)
-        # time.sleep(3)
-        # GPIO.output(LED_PIN, 0)
+            db.session.add(new_log)
+            db.session.commit()
+
+            # Print query
+            for tt in list_access:
+                print( tt[1].room,
+                    tt[2].name,
+                    tt[0].dt_access,
+                    tt[3].desc_hour,
+                    tt[0].description)
+
+            # Colocar aqui o RASP
+
+            # GPIO.setmode(GPIO.BOARD)
+            # GPIO.setup(LED_PIN, GPIO.OUT)
+            # GPIO.output(LED_PIN, 1)
+            # time.sleep(3)
+            # GPIO.output(LED_PIN, 0)
+
+        else:
+            flash([0,'Access denied.'],category='info')
+
+        # date_hour_now = datetime.now()
+        # date_hour_str = date_hour_now.strftime('%d/%m/%Y %H:%M:%S')
+
+        # print(room_post,session["user_id"],date_hour_str)
+
 
     return render_template('access.html', rooms=rooms)
+
+# ---------------------- End Access Room

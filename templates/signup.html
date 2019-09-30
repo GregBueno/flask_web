@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="column is-4 is-offset-4">
-    <h3 class="title">Register</h3>
+    <h3 class="title">User</h3>
     <div class="box">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -65,6 +65,35 @@
 
             <button class="button is-block is-info is-large is-fullwidth">Save</button>
         </form>
+    </div>
+</div>
+
+<div class="flight-container" style="overflow: auto; max-height: 80vh">
+    <div class="table-responsive">
+        <table class="table" id="users">
+            <thead>
+                <tr>
+                    <th scope="col">E-mail</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Num University</th>
+                    <th scope="col">Access Permission</th>
+                    <th scope="col">Date Start Access</th>
+                    <th scope="col">Date End Access</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for u in users %}
+                <tr id={{ u.id }}>
+                    <th scope="row">{{ u.email }}</th>
+                    <td> {{ u.name }} </td>
+                    <td> {{ u.num_university }} </td>
+                    <td> {{ u.access_permission }} </td>
+                    <td> {{ u.dt_start_access }} </td>
+                    <td> {{ u.dt_end_access }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

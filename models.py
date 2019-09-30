@@ -39,9 +39,10 @@ class Hours(db.Model):
 class HourRegister(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     room_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
     dt_access = db.Column(db.String(200))
     hours_id = db.Column(db.Integer)
-    desc = db.Column(db.String(1000))
+    description = db.Column(db.String(1000))
 
 class LogAccess(db.Model):
     id = db.Column(db.Integer,primary_key=True)
