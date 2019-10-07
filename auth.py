@@ -178,7 +178,7 @@ def register_access_post():
     dt_start_access = dt_access + ' ' + hours_selected.hour_start
     dt_end_access = dt_access + ' ' + hours_selected.hour_end
 
-    print(dt_start_access, dt_end_access)
+    # print(dt_start_access, dt_end_access)
     # dt_access = dt_access + ' ' + hour_access
     # date_time_access = datetime.strptime(date_access, '%d/%m/%Y %H:%M:%S')
 
@@ -204,6 +204,10 @@ def logaccess():
     print(logaccess)
     return render_template('logaccess.html', logaccess=logaccess)
 
+def convert2datetime(date_str):
+    datetime_val = datetime.strptime(date_str, '%d/%m/%Y %H:%M:%S')
+    return datetime_val
+
 # ---------------------- Access Room
 @auth.route('/access',methods=['POST','GET'])
 @login_required
@@ -217,28 +221,31 @@ def access():
         date_access = dt_access + ' ' + hour_access
         date_time_access = datetime.strptime(date_access, '%d/%m/%Y %H:%M:%S')
 
-        print(room_post, date_access)
+        # print(room_post, date_access)
 
         list_access = db.session.query(HourRegister, Room, User, Hours
         ).join(Room, Room.id == HourRegister.room_id
         ).join(User, User.id == HourRegister.user_id
         ).join(Hours, Hours.id == HourRegister.hours_id
-        ).filter(Room.id == room_post, User.id == session["user_id"], HourRegister.dt_access == dt_access
+        ).filter(HourRegister.datetime_start_access > date_time_access
+            # Room.id == room_post, User.id == session["user_id"],
+        # convert2datetime(str(HourRegister.dt_start_access)) >= date_time_access, convert2datetime(str(HourRegister.dt_end_access)) <= date_time_access
         ).all()
 
         if len(list_access) > 0:
             flash([1,'Access released.'],category='info')
 
-            new_log = LogAccess(room_id = room_post,
-                    user_id = session["user_id"],
-                    date_access = date_access)
+            # new_log = LogAccess(room_id = room_post,
+            #         user_id = session["user_id"],
+            #         date_access = date_access)
 
-            db.session.add(new_log)
-            db.session.commit()
+            # db.session.add(new_log)
+            # db.session.commit()
 
             # Print query
             for tt in list_access:
                 print(tt[1].room,
+                    type(tt[0].dt_start_access),
                     tt[2].name,
                     tt[0].dt_access,
                     tt[3].hour_start,

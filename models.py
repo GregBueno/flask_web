@@ -1,5 +1,7 @@
 from flask_login import UserMixin
 from . import db
+from sqlalchemy.ext.hybrid import hybrid_property
+from datetime import datetime
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -51,6 +53,18 @@ class HourRegister(db.Model):
     description = db.Column(db.String(1000))
     dt_start_access = db.Column(db.String(1000))
     dt_end_access = db.Column(db.String(1000))
+
+    # def __init__(self, dt_start_access, dt_end_access):
+    #     print(self.dt_start_access,self.dt_end_access)
+
+    @hybrid_property
+    def datetime_start_access(self):
+        print(self.dt_start_access)
+        return datetime.strptime(self.dt_start_access, '%d/%m/%Y %H:%M:%S')
+
+    # @hybrid_property
+    # def datetime_end_access(self):
+    #     return datetime.strptime(self.dt_end_access, '%d/%m/%Y %H:%M:%S')
 
 class LogAccess(db.Model):
     id = db.Column(db.Integer,primary_key=True)
