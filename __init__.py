@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_user import UserManager
+from flask_user import UserManager, current_user
 
 db = SQLAlchemy()
 
@@ -12,6 +12,12 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 
     db.init_app(app)
+
+    def check_role():
+        # bool_role = any(role.name for role in current_user.roles if role.name in list_role)
+        return str('bool_role')
+
+    app.jinja_env.filters['check_role'] = check_role
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'

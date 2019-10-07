@@ -36,12 +36,12 @@
                 </div>
             </div>
 
-            <div class="field">
+            <!-- <div class="field">
                 <label class="checkbox">
                     <input type="checkbox" name="access_p" placeholder="access_p">
                     Access Room
                 </label>
-            </div>
+            </div> -->
 
             <div class="field">
                 <div class="control">
@@ -56,7 +56,7 @@
             </div>
 
             <div class="field">
-                <select name=role_p class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                <select name=role_p class="select" id="inlineFormCustomSelect">
                     {% for role in role_list %}
                     <option value= "{{role}}" SELECTED>{{role}}</option>"
                     {% endfor %}
@@ -76,7 +76,7 @@
                     <th scope="col">E-mail</th>
                     <th scope="col">Name</th>
                     <th scope="col">Num University</th>
-                    <th scope="col">Access Permission</th>
+                    <!-- <th scope="col">Access Permission</th> -->
                     <th scope="col">Date Start Access</th>
                     <th scope="col">Date End Access</th>
                 </tr>
@@ -87,7 +87,7 @@
                     <th scope="row">{{ u.email }}</th>
                     <td> {{ u.name }} </td>
                     <td> {{ u.num_university }} </td>
-                    <td> {{ u.access_permission }} </td>
+                    <!-- <td> {{ u.access_permission }} </td> -->
                     <td> {{ u.dt_start_access }} </td>
                     <td> {{ u.dt_end_access }} </td>
                 </tr>

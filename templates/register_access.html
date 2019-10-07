@@ -14,7 +14,7 @@
         <form action="/register_access" method="POST">
 
             <div class="field">
-                <select name=room_list class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                <select name=room_list class="select" id="inlineFormCustomSelect">
                     {% for r in room_list %}
                     <option value= "{{r.id}}" SELECTED>{{r.room}}</option>"
                     {% endfor %}
@@ -22,7 +22,7 @@
             </div>
 
             <div class="field">
-                <select name=user_list class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                <select name=user_list class="select" id="inlineFormCustomSelect">
                     {% for u in user_list %}
                     <option value= "{{u.id}}" SELECTED>{{u.name}}</option>"
                     {% endfor %}
@@ -36,7 +36,7 @@
             </div>
 
             <div class="field">
-                <select name=hour_list class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                <select name=hour_list class="select" id="inlineFormCustomSelect">
                     {% for h in list_hour %}
                     <option value= "{{h.id}}" SELECTED>{{h.desc_hour}}</option>"
                     {% endfor %}

@@ -23,7 +23,7 @@
         {% endwith %}
         <form method="POST" action="/access">
             <div class="field">
-                <select name=rooms class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                <select name=rooms class="select" id="inlineFormCustomSelect">
                     {% for r in rooms %}
                     <option value= "{{r.id}}" SELECTED>{{r.room}}</option>"
                     {% endfor %}

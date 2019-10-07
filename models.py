@@ -15,6 +15,12 @@ class User(UserMixin, db.Model):
     roles = db.relationship('Role', secondary='user_roles',
             backref=db.backref('users', lazy='dynamic'))
 
+    def __init__(self,roles):
+        self.roles
+
+    def has_role(self, list_roles):
+        return any(role.name for role in self.roles if role.name in list_roles)
+
 # Define the Role data model
 class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -43,6 +49,8 @@ class HourRegister(db.Model):
     dt_access = db.Column(db.String(200))
     hours_id = db.Column(db.Integer)
     description = db.Column(db.String(1000))
+    dt_start_access = db.Column(db.String(1000))
+    dt_end_access = db.Column(db.String(1000))
 
 class LogAccess(db.Model):
     id = db.Column(db.Integer,primary_key=True)

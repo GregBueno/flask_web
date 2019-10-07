@@ -28,31 +28,31 @@
                             </a>
                             {% endif %}
 
-                            {% if current_user.is_authenticated %}
+                            {% if current_user.is_authenticated and current_user.has_role(['admin','professor'])%}
                             <a href="{{ url_for('auth.logaccess') }}" class="navbar-item">
                                 Log Access
                             </a>
                             {% endif %}
 
-                            {% if current_user.is_authenticated %}
+                            {% if current_user.is_authenticated and current_user.has_role(['admin'])%}
                             <a href="{{ url_for('auth.signup') }}" class="navbar-item">
                                 Register User
                             </a>
                             {% endif %}
 
-                            {% if current_user.is_authenticated %}
+                            {% if current_user.is_authenticated and current_user.has_role(['admin']) %}
                             <a href="{{ url_for('auth.hours') }}" class="navbar-item">
                                 Register Hour
                             </a>
                             {% endif %}
 
-                            {% if current_user.is_authenticated %}
+                            {% if current_user.is_authenticated and current_user.has_role(['admin'])%}
                             <a href="{{ url_for('auth.rooms') }}" class="navbar-item">
                                 Register Room
                             </a>
                             {% endif %}
 
-                            {% if current_user.is_authenticated %}
+                            {% if current_user.is_authenticated and current_user.has_role(['admin'])%}
                             <a href="{{ url_for('auth.register_access') }}" class="navbar-item">
                                 Register Access
                             </a>

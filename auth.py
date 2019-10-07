@@ -4,13 +4,20 @@ from flask_login import login_user, logout_user, login_required
 from .models import User, Room, LogAccess, Role, Hours, HourRegister
 from . import db
 from datetime import datetime
-from flask_user import roles_required, UserManager
+from flask_user import roles_required, UserManager, current_user, UserMixin
+# from flask_security import Principal, Permission, RoleNeed
 
 # from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 
 # import RPi.GPIO as GPIO
 
 auth = Blueprint('auth', __name__)
+
+@auth.route("/TestUser")
+def user_role():
+    # user_roles = any(role.name for role in current_user.roles if role.name in ['aluno','professor'])
+    checked_role = current_user.has_role(['admin'])
+    return str(checked_role)
 
 @auth.route('/login')
 def login():
@@ -45,11 +52,12 @@ def signup_post():
     name = request.form.get('name')
     password = request.form.get('password')
     num_un_p = request.form.get('num_un_p')
-    access_p = request.form.get('access_p')
+    # access_p = request.form.get('access_p')
     dt_start = request.form.get('dt_start')
     dt_end = request.form.get('dt_end')
     role_p = request.form.get('role_p')
 
+    access_p = 'OFF'
     if access_p == 'ON':
         access_p = 1
     else:
@@ -147,12 +155,12 @@ def register_access():
     ).filter(User.name != 'test'
     ).all()
 
-    for tt in list_access:
-        print( tt[1].room,
-               tt[2].name,
-               tt[0].dt_access,
-               tt[3].desc_hour,
-               tt[0].description)
+    # for tt in list_access:
+    #     print( tt[1].room,
+    #            tt[2].name,
+    #            tt[0].dt_access,
+    #            tt[3].desc_hour,
+    #            tt[0].description)
 
     return render_template('register_access.html', room_list=rooms, user_list=users, list_hour=hours, list_access = list_access)
 
@@ -165,8 +173,17 @@ def register_access_post():
     hour = request.form.get('hour_list')
     description = request.form.get('description')
 
-    new_access = HourRegister(room_id = room, user_id = user, dt_access = dt_access, hours_id = hour, description = description)
-    print(room,user,dt_access,hour,description)
+    hours_selected = Hours.query.filter_by(id= hour).first()
+
+    dt_start_access = dt_access + ' ' + hours_selected.hour_start
+    dt_end_access = dt_access + ' ' + hours_selected.hour_end
+
+    print(dt_start_access, dt_end_access)
+    # dt_access = dt_access + ' ' + hour_access
+    # date_time_access = datetime.strptime(date_access, '%d/%m/%Y %H:%M:%S')
+
+    new_access = HourRegister(room_id = room, user_id = user, dt_access = dt_access, hours_id = hour, description = description, dt_start_access = dt_start_access, dt_end_access = dt_end_access)
+    # print(room,user,dt_access,hour,description)
 
     db.session.add(new_access)
     db.session.commit()
@@ -177,7 +194,13 @@ def register_access_post():
 @auth.route('/logaccess')
 @login_required
 def logaccess():
-    logaccess = LogAccess.query.all()
+    # logaccess = LogAccess.query.all()
+
+    logaccess = db.session.query(LogAccess, Room, User
+    ).join(Room, Room.id == LogAccess.room_id
+    ).join(User, User.id == LogAccess.user_id
+    ).all()
+
     print(logaccess)
     return render_template('logaccess.html', logaccess=logaccess)
 
@@ -191,7 +214,10 @@ def access():
         dt_access = request.form.get('dt_access')
         hour_access = request.form.get('hour_access')
 
-        print(room_post,dt_access,hour_access)
+        date_access = dt_access + ' ' + hour_access
+        date_time_access = datetime.strptime(date_access, '%d/%m/%Y %H:%M:%S')
+
+        print(room_post, date_access)
 
         list_access = db.session.query(HourRegister, Room, User, Hours
         ).join(Room, Room.id == HourRegister.room_id
@@ -205,18 +231,23 @@ def access():
 
             new_log = LogAccess(room_id = room_post,
                     user_id = session["user_id"],
-                    date_access = dt_access + ' ' + hour_access)
+                    date_access = date_access)
 
             db.session.add(new_log)
             db.session.commit()
 
             # Print query
             for tt in list_access:
-                print( tt[1].room,
+                print(tt[1].room,
                     tt[2].name,
                     tt[0].dt_access,
-                    tt[3].desc_hour,
+                    tt[3].hour_start,
+                    tt[3].hour_end,
                     tt[0].description)
+
+
+            # if  date_time_obj_in <= date_time_obj <= date_time_obj_end:
+            #     print(date_time_obj)
 
             # Colocar aqui o RASP
 

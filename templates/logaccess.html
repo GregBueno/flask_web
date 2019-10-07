@@ -12,13 +12,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for log in logaccess %}
-                    <tr id={{ log.id }}>
-                        <th scope="row">{{ log.room_id }}</th>
-                        <td> {{ log.user_id }} </td>
-                        <td> {{ log.date_access }} </td>
-                    </tr>
-                {% endfor %}
+                    {% for tt in logaccess %}
+                        <tr id={{ tt[0].id }}>
+                            <th scope="row">{{ tt[1].room }}</th>
+                            <td> {{ tt[2].name }} </td>
+                            <td> {{ tt[0].date_access }} </td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
