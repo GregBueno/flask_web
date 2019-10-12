@@ -1,3 +1,4 @@
+import time
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
@@ -9,7 +10,7 @@ from flask_user import roles_required, UserManager, current_user, UserMixin
 
 # from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 auth = Blueprint('auth', __name__)
 
@@ -221,57 +222,49 @@ def access():
         date_access = dt_access + ' ' + hour_access
         date_time_access = datetime.strptime(date_access, '%d/%m/%Y %H:%M:%S')
 
-        # print(room_post, date_access)
+        print(date_time_access)
 
         list_access = db.session.query(HourRegister, Room, User, Hours
         ).join(Room, Room.id == HourRegister.room_id
         ).join(User, User.id == HourRegister.user_id
         ).join(Hours, Hours.id == HourRegister.hours_id
-        ).filter(HourRegister.datetime_start_access > date_time_access
-            # Room.id == room_post, User.id == session["user_id"],
-        # convert2datetime(str(HourRegister.dt_start_access)) >= date_time_access, convert2datetime(str(HourRegister.dt_end_access)) <= date_time_access
+        ).filter(Room.id == room_post, User.id == session["user_id"],
+                 HourRegister.datetime_start_access <= date_time_access,
+                 HourRegister.datetime_end_access >= date_time_access,
         ).all()
 
-        if len(list_access) > 0:
+        if len(list_access) > 0 or current_user.has_role(['admin']) == True :
             flash([1,'Access released.'],category='info')
 
-            # new_log = LogAccess(room_id = room_post,
-            #         user_id = session["user_id"],
-            #         date_access = date_access)
+            new_log = LogAccess(room_id = room_post,
+                    user_id = session["user_id"],
+                    date_access = date_access)
 
-            # db.session.add(new_log)
-            # db.session.commit()
+            db.session.add(new_log)
+            db.session.commit()
 
             # Print query
-            for tt in list_access:
-                print(tt[1].room,
-                    type(tt[0].dt_start_access),
-                    tt[2].name,
-                    tt[0].dt_access,
-                    tt[3].hour_start,
-                    tt[3].hour_end,
-                    tt[0].description)
+            # for tt in list_access:
+            #     print(tt[1].room,
+            #         type(tt[0].dt_start_access),
+            #         tt[2].name,
+            #         tt[0].dt_access,
+            #         tt[3].hour_start,
+            #         tt[3].hour_end,
+            #         tt[0].description)
 
-
-            # if  date_time_obj_in <= date_time_obj <= date_time_obj_end:
-            #     print(date_time_obj)
 
             # Colocar aqui o RASP
 
-            # GPIO.setmode(GPIO.BOARD)
-            # GPIO.setup(LED_PIN, GPIO.OUT)
-            # GPIO.output(LED_PIN, 1)
-            # time.sleep(3)
-            # GPIO.output(LED_PIN, 0)
+            LED_PIN = 32
+            GPIO.setmode(GPIO.BOARD)
+            GPIO.setup(LED_PIN, GPIO.OUT)
+            GPIO.output(LED_PIN, 1)
+            time.sleep(3)
+            GPIO.output(LED_PIN, 0)
 
         else:
             flash([0,'Access denied.'],category='info')
-
-        # date_hour_now = datetime.now()
-        # date_hour_str = date_hour_now.strftime('%d/%m/%Y %H:%M:%S')
-
-        # print(room_post,session["user_id"],date_hour_str)
-
 
     return render_template('access.html', rooms=rooms)
 

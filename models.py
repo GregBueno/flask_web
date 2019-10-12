@@ -2,6 +2,7 @@ from flask_login import UserMixin
 from . import db
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
+from sqlalchemy import func
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,17 +55,29 @@ class HourRegister(db.Model):
     dt_start_access = db.Column(db.String(1000))
     dt_end_access = db.Column(db.String(1000))
 
-    # def __init__(self, dt_start_access, dt_end_access):
-    #     print(self.dt_start_access,self.dt_end_access)
+    # def __init__(self, room_id, user_id, dt_access, hours_id, description, dt_start_access, dt_end_access):
+    #     self.dt_start_access = dt_start_access
+    #     self.dt_end_access = dt_end_access
 
     @hybrid_property
     def datetime_start_access(self):
-        print(self.dt_start_access)
         return datetime.strptime(self.dt_start_access, '%d/%m/%Y %H:%M:%S')
 
-    # @hybrid_property
-    # def datetime_end_access(self):
-    #     return datetime.strptime(self.dt_end_access, '%d/%m/%Y %H:%M:%S')
+    @datetime_start_access.expression
+    def datetime_start_access(cls):
+        dt_column =(func.substr(cls.dt_start_access, 7, 4) + "-" + func.substr(cls.dt_start_access, 4, 2) + "-" + func.substr(cls.dt_start_access, 1, 2) + ' ' + func.substr(cls.dt_start_access, 12) )
+        dt_column = func.datetime(dt_column)
+        return dt_column
+
+    @hybrid_property
+    def datetime_end_access(self):
+        return datetime.strptime(self.dt_end_access, '%d/%m/%Y %H:%M:%S')
+
+    @datetime_end_access.expression
+    def datetime_end_access(cls):
+        dt_column =(func.substr(cls.dt_end_access, 7, 4) + "-" + func.substr(cls.dt_end_access, 4, 2) + "-" + func.substr(cls.dt_end_access, 1, 2) + ' ' + func.substr(cls.dt_end_access, 12) )
+        dt_column = func.datetime(dt_column)
+        return dt_column
 
 class LogAccess(db.Model):
     id = db.Column(db.Integer,primary_key=True)
