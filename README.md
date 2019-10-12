@@ -24,6 +24,7 @@ $ db.create_all(app=create_app())
 ### Running
 
 ```
+$ cd ..
 $ export FLASK_APP=flask_web
 $ export FLASK_DEBUG=1
 $ flask run
